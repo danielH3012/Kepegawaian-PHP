@@ -1,74 +1,150 @@
 <?php
-include('header.php');
-include('sidebar.php');
+//session_start();
 require 'config.php';
-function perusahaan() {
-    $cons = 'perusahaan';
-  }
+include('header.php'); 
+//include('sidebar.php');
+//if (!isset($_SESSION['iduser'])) {
+  // header("Location: login.php");
+    //exit();
+//}
 
+$iduser = $_SESSION['user'];
 
-if (isset($_GET['hello'])) {
-    perusahaan();
-  }
+// Ambil data dari tabel departemen
+$result = $conn->query("SELECT * FROM namausaha");
+$usaha = $result->fetch_row();
+
+// Simpan pesan ke variabel dan hapus dari session
+$message = null;
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']);
+}
 ?>
+<header>
+        <h4><?php echo htmlspecialchars($usaha[0]); ?></h4>
+        <p><?php echo htmlspecialchars($usaha[1]); ?></p>
+    </header>
+ <?php include 'sidebar.php'; ?>
+ <div class="content" id="content">
+ <button type="button" class="btn btn-primary mb-3 mr-2" data-bs-toggle="modal" data-bs-target="#adddepartemenModal"><i class='fas fa-plus'></i> Edit </button>
+    <div class="form-group">
+        <label>NAMA:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[0];?>" class="form-control" readonly/>
+    </div>
 
-<!-- Content -->
-<div class="content-wrapper">
-     <!-- Informasi penting HRD -->
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card text-white bg-primary">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-users"></i>Nama Perusahaan: </h5>
-                    <p class="card-text">PT Bina Bakti Bangsa</p>
-                    
-                </div>
-            </div>
-        </div>
+    <div class="form-group">
+        <label>ALAMAT:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[1];?>" class="form-control" readonly/>
+    </div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-warning">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-exclamation-triangle"></i>Alamat</h5>
-                    <p class="card-text">Jl. Lodan Raya No.2, RT.12/RW.2, Ancol, Kec. Pademangan, Jkt Utara, Daerah Khusus Ibukota Jakarta 14430</p>
-                </div>
-            </div>
-        </div>
+    <div class="form-group">
+        <label>NOMOR TELEPON:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[2];?>" class="form-control" readonly/>
+    </div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-danger">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-plane-departure"></i>Nomor Telepon</h5>
-                    <p class="card-text">+62-838-555-392</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card text-white bg-danger">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-plane-departure"></i>Email</h5>
-                    <p class="card-text">s32230127@student.ubm.ac.id</p>
-                </div>
-            </div>
-        </div>
+    <div class="form-group">
+        <label>FAX:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[3];?>" class="form-control" readonly/>
+    </div>
+    <div class="form-group">
+        <label>EMAIL:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[4];?>" class="form-control" readonly/>
+    </div>
+    <div class="form-group">
+        <label>NPWP:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[5];?>" class="form-control" readonly/>
+    </div>
+    <div class="form-group">
+        <label>BANK:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[6];?>" class="form-control" readonly/>
+    </div>
+    <div class="form-group">
+        <label>NOMOR ACCOUNT:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[7];?>" class="form-control" readonly/>
+    </div>
+    <div class="form-group">
+        <label>ATAS NAMA:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[8];?>" class="form-control" readonly/>
+    </div>
+    <div class="form-group">
+        <label>PIMPINAN:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[9];?>" class="form-control" readonly/>
+    </div>
+    <div class="form-group">
+        <label>    </label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[9];?>" class="form-control" readonly/>
+    </div>
+    <?php require 'footer.php'; ?>
  </div>
 
-<div class="additional-content">
-    <h1>VISI: </h1>
-    <p>Menjadi perguruan tinggi unggulan yang menyelenggarakan pendidikan berkualitas tinggi dan berorientasi pada industri.</p>
+ <div class="modal fade" id="adddepartemenModal" tabindex="-1" aria-labelledby="adddepartemenModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="adddepartemenModalLabel">edit usaha</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="edit_usaha.php" method="post">
+                <div class="form-group">
+        <label>NAMA:</label> 
+            <input type="txt" name="nama" value="<?php echo $usaha[0];?>" class="form-control" required/>
+    </div>
+
+    <div class="form-group">
+        <label>ALAMAT:</label> 
+            <input type="txt" name="alamat" value="<?php echo $usaha[1];?>" class="form-control" required/>
+    </div>
+
+    <div class="form-group">
+        <label>NOMOR TELEPON:</label> 
+            <input type="txt" name="notelp" value="<?php echo $usaha[2];?>" class="form-control" required/>
+    </div>
+
+    <div class="form-group">
+        <label>FAX:</label> 
+            <input type="txt" name="fax" value="<?php echo $usaha[3];?>" class="form-control" required/>
+    </div>
+    <div class="form-group">
+        <label>EMAIL:</label> 
+            <input type="txt" name="email" value="<?php echo $usaha[4];?>" class="form-control" required/>
+    </div>
+    <div class="form-group">
+        <label>NPWP:</label> 
+            <input type="txt" name="npwp" value="<?php echo $usaha[5];?>" class="form-control" required/>
+    </div>
+    <div class="form-group">
+        <label>BANK:</label> 
+            <input type="txt" name="bank" value="<?php echo $usaha[6];?>" class="form-control" required/>
+    </div>
+    <div class="form-group">
+        <label>NOMOR ACCOUNT:</label> 
+            <input type="txt" name="akun" value="<?php echo $usaha[7];?>" class="form-control" required/>
+    </div>
+    <div class="form-group">
+        <label>ATAS NAMA:</label> 
+            <input type="txt" name="an" value="<?php echo $usaha[8];?>" class="form-control" required/>
+    </div>
+    <div class="form-group">
+        <label>PIMPINAN:</label> 
+            <input type="txt" name="pimpinan" value="<?php echo $usaha[9];?>" class="form-control" required/>
+    </div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="additional-content">
-    <h1>MISI: </h1>
-    <ul>
-        <li>Menyelenggarakan pendidikan untuk menghasilkan lulusan siap pakai yang mempunyai kompetensi dan daya saing tinggi dibidang keilmuan masing-masing.</li>
-        <li>Menyelenggarakan program-program penelitian dan pengembangan guna menghasilkan konsep-konsep, teori dan hasil kajian yang secara fungsional dapat mendukung pengembangan kehidupan bermasyarakat.</li>
-        <li>Melaksanakan dan mengembangkan program-program pemberdayaan dan pengabdian kepada masyarakat melalui bidang ilmu pengetahuan, teknologi dan seni yang bermanfaat bagi kemajuan masyakat.</li>
-    </ul>
+<!-- Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 
+</body>
+</html>
 
-</div>
-</div>
-<?php
-include('footer.php');

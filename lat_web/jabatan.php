@@ -26,17 +26,17 @@ $stmt->fetch();
 $stmt->close();
 
 // Ambil data dari tabel departemen
-$result = $conn->query("SELECT * FROM departemen");
+$result = $conn->query("SELECT * FROM jabatan");
 
 // Dapatkan nomor urut terbaru untuk iddep baru
-$stmt = $conn->query("SELECT id_departemen FROM departemen ORDER BY id_departemen DESC LIMIT 1");
+$stmt = $conn->query("SELECT id_jabatan FROM jabatan ORDER BY id_jabatan DESC LIMIT 1");
 $latestiddep = $stmt->fetch_assoc();
 $urut = 1;
 if ($latestiddep) {
-    $latestNumber = $latestiddep['id_departemen'];
+    $latestNumber = (int) substr($latestiddep['id_jabatan'], 1);
     $urut = $latestNumber + 1;
 }
-$newiddep = $urut;
+$newiddep =  $urut;
 
 // Simpan pesan ke variabel dan hapus dari session
 $message = null;
@@ -58,7 +58,7 @@ if (isset($_SESSION['message'])) {
         <div class="container-fluid mt-3">
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-between align-items-center">
-                    <h4>Departemen</h4>
+                    <h4>Jabatan</h4>
                     <div>
                         <button type="button" class="btn btn-primary mb-3 mr-2" data-bs-toggle="modal" data-bs-target="#adddepartemenModal"><i class='fas fa-plus'></i> Add </button>
                         <button type="button" class="btn btn-secondary mb-3" id="printButton"><i class='fas fa-print'></i> Print</button>
@@ -73,7 +73,7 @@ if (isset($_SESSION['message'])) {
                                 <tr>
                                     <th>No</th>
                                     <th>Kode</th>
-                                    <th>Nama Departemen</th>
+                                    <th>Nama Jabatan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -84,12 +84,12 @@ if (isset($_SESSION['message'])) {
                                     while ($departemen = $result->fetch_assoc()) {
                                         echo "<tr>";
                                         echo "<td class='text-center'>" . $no++ . "</td>";
-                                        echo "<td class='text-center'>" . htmlspecialchars($departemen['id_departemen']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($departemen['nama_departemen']) . "</td>";
+                                        echo "<td class='text-center'>" . htmlspecialchars($departemen['id_jabatan']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($departemen['nama_jabatan']) . "</td>";
                                         echo "<td class='text-center'>";
                                         echo "<div class='d-flex justify-content-center'>";
-                                        echo "<button class='btn btn-warning btn-sm edit-btn mr-1' data-bs-toggle='modal' data-bs-target='#editdepartemenModal' data-id='" . htmlspecialchars($departemen['id_departemen']) . "' data-name='" . htmlspecialchars($departemen['nama_departemen']) .  "'><i class='fas fa-edit'></i> Edit</button>";
-                                        echo "<button class='btn btn-danger btn-sm delete-btn' data-id='" . htmlspecialchars($departemen['id_departemen']) . "'><i class='fas fa-trash'></i> Delete</button>";
+                                        echo "<button class='btn btn-warning btn-sm edit-btn mr-1' data-bs-toggle='modal' data-bs-target='#editdepartemenModal' data-id='" . htmlspecialchars($departemen['id_jabatan']) . "' data-name='" . htmlspecialchars($departemen['nama_jabatan']) .  "'><i class='fas fa-edit'></i> Edit</button>";
+                                        echo "<button class='btn btn-danger btn-sm delete-btn' data-id='" . htmlspecialchars($departemen['id_jabatan']) . "'><i class='fas fa-trash'></i> Delete</button>";
                                         echo "</div>";
                                         echo "</td>";
                                         echo "</tr>";
@@ -113,18 +113,18 @@ if (isset($_SESSION['message'])) {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="adddepartemenModalLabel">Add departemen</h5>
+                <h5 class="modal-title" id="adddepartemenModalLabel">Add jabatan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="add_departemen.php" method="post">
+                <form action="add_jabatan.php" method="post">
                     <div class="mb-3">
-                    <label for="iddep" class="form-label">Kode departemen</label>
+                    <label for="iddep" class="form-label">Kode Jabatan</label>
                         <input type="text" class="form-control" id="iddep" name="iddep" value="<?php echo htmlspecialchars($newiddep); ?>" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="departemen" class="form-label">Nama departemen</label>
-                        <input type="text" class="form-control" id="departemen" name="departemen" required>
+                        <label for="jabatan" class="form-label">Nama Jabatan</label>
+                        <input type="text" class="form-control" id="jabatan" name="jabatan" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Add</button>
                 </form>
@@ -142,14 +142,14 @@ if (isset($_SESSION['message'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="edit_departemen.php" method="post">
+                <form action="edit_jabatan.php" method="post">
                     <div class="mb-3">
                         <label for="edit_iddep" class="form-label">Kode departemen</label>
                         <input type="text" class="form-control" id="edit_iddep" name="iddep" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_departemen" class="form-label">Nama departemen</label>
-                        <input type="text" class="form-control" id="edit_departemen" name="departemen" required>
+                        <label for="edit_jabatan" class="form-label">Nama departemen</label>
+                        <input type="text" class="form-control" id="edit_jabatan" name="jabatan" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
@@ -198,7 +198,7 @@ if (isset($_SESSION['message'])) {
             
             var modal = $(this);
             modal.find('#edit_iddep').val(iddep);
-            modal.find('#edit_departemen').val(departemen);
+            modal.find('#edit_jabatan').val(departemen);
         });
 
         // Show message if it exists in the session
@@ -224,7 +224,7 @@ if (isset($_SESSION['message'])) {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: 'delete_departemen.php',
+                        url: 'delete_jabatan.php',
                         type: 'POST',
                         data: { iddep: iddep },
                         success: function(response) {
@@ -270,4 +270,3 @@ if (isset($_SESSION['message'])) {
 </script>
 </body>
 </html>
-

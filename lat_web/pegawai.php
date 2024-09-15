@@ -26,14 +26,14 @@ $stmt->fetch();
 $stmt->close();
 
 // Ambil data dari tabel departemen
-$result = $conn->query("SELECT * FROM departemen");
+$result = $conn->query("SELECT * FROM pegawai");
 
 // Dapatkan nomor urut terbaru untuk iddep baru
-$stmt = $conn->query("SELECT id_departemen FROM departemen ORDER BY id_departemen DESC LIMIT 1");
-$latestiddep = $stmt->fetch_assoc();
+$stmt = $conn->query("SELECT * FROM pegawai ORDER BY id_pegawai DESC LIMIT 1");
+$latestiddep = $stmt->fetch_row();
 $urut = 1;
 if ($latestiddep) {
-    $latestNumber = $latestiddep['id_departemen'];
+    $latestNumber = $latestiddep[0];
     $urut = $latestNumber + 1;
 }
 $newiddep = $urut;
@@ -53,12 +53,12 @@ if (isset($_SESSION['message'])) {
         <p><?php echo htmlspecialchars($alamatUsaha); ?></p>
     </header>
 
-    <?php include 'sidebar.php'; ?>
+   <?php include 'sidebar.php'; ?>
     <div class="content" id="content">
         <div class="container-fluid mt-3">
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-between align-items-center">
-                    <h4>Departemen</h4>
+                    <h4>Pegawai</h4>
                     <div>
                         <button type="button" class="btn btn-primary mb-3 mr-2" data-bs-toggle="modal" data-bs-target="#adddepartemenModal"><i class='fas fa-plus'></i> Add </button>
                         <button type="button" class="btn btn-secondary mb-3" id="printButton"><i class='fas fa-print'></i> Print</button>
@@ -72,8 +72,14 @@ if (isset($_SESSION['message'])) {
                             <thead class="text-center">
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode</th>
-                                    <th>Nama Departemen</th>
+                                    <th>Foto</th>
+                                    <th>Id Pegawai</th>
+                                    <th>Id Departemen</th>
+                                    <th>Id Jabatan</th>
+                                    <th>Nama Pegawai</th>
+                                    <th>Alamat</th>
+                                    <th>Nomor Telepon</th>
+                                    <th>Email</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -81,15 +87,30 @@ if (isset($_SESSION['message'])) {
                                 <?php
                                 if ($result && $result->num_rows > 0) {
                                     $no = 1;
-                                    while ($departemen = $result->fetch_assoc()) {
+                                    while ($departemen = $result->fetch_row()) {
                                         echo "<tr>";
                                         echo "<td class='text-center'>" . $no++ . "</td>";
-                                        echo "<td class='text-center'>" . htmlspecialchars($departemen['id_departemen']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($departemen['nama_departemen']) . "</td>";
+                                        echo "<td class='text-center'><img style= \"height: 50px; width: 50px;\" src= ". $departemen[7];"</td>";
+                                        echo "<td class='text-center'>";
+                                        echo "<td class='text-center'>" . $departemen[0] . "</td>";
+                                        echo "<td class='text-center'>" . $departemen[1] . "</td>";
+                                        echo "<td class='text-center'>" . $departemen[2] . "</td>";
+                                        echo "<td class='text-center'>" . $departemen[3] . "</td>";
+                                        echo "<td class='text-center'>" . $departemen[4] . "</td>";
+                                        echo "<td class='text-center'>" . $departemen[5] . "</td>";
+                                        echo "<td class='text-center'>" . $departemen[6] . "</td>";
                                         echo "<td class='text-center'>";
                                         echo "<div class='d-flex justify-content-center'>";
-                                        echo "<button class='btn btn-warning btn-sm edit-btn mr-1' data-bs-toggle='modal' data-bs-target='#editdepartemenModal' data-id='" . htmlspecialchars($departemen['id_departemen']) . "' data-name='" . htmlspecialchars($departemen['nama_departemen']) .  "'><i class='fas fa-edit'></i> Edit</button>";
-                                        echo "<button class='btn btn-danger btn-sm delete-btn' data-id='" . htmlspecialchars($departemen['id_departemen']) . "'><i class='fas fa-trash'></i> Delete</button>";
+                                        echo "<button class='btn btn-warning btn-sm edit-btn mr-1' data-bs-toggle='modal' data-bs-target='#editdepartemenModal'
+                                        data-id='" . htmlspecialchars($departemen[0]) . "
+                                        ' data-id_departemen='" . htmlspecialchars($departemen[1]) .  "
+                                        ' data-id_jabatan='" . htmlspecialchars($departemen[2]) .  "
+                                        ' data-name='" . htmlspecialchars($departemen[3]) .  "
+                                        ' data-alamat='" . htmlspecialchars($departemen[4]) .  "
+                                        ' data-telp='" . htmlspecialchars($departemen[5]) .  "
+                                        ' data-email='" . htmlspecialchars($departemen[6]) .  "
+                                        '><i class='fas fa-edit'></i> Edit</button>";
+                                        echo "<button class='btn btn-danger btn-sm delete-btn' data-id='" . htmlspecialchars($departemen[0]) . "'><i class='fas fa-trash'></i> Delete</button>";
                                         echo "</div>";
                                         echo "</td>";
                                         echo "</tr>";
@@ -113,26 +134,53 @@ if (isset($_SESSION['message'])) {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="adddepartemenModalLabel">Add departemen</h5>
+                <h5 class="modal-title" id="adddepartemenModalLabel">Add pegawai</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="add_departemen.php" method="post">
+                <form action="add_pegawai.php" method="post"  enctype="multipart/form-data">
                     <div class="mb-3">
-                    <label for="iddep" class="form-label">Kode departemen</label>
-                        <input type="text" class="form-control" id="iddep" name="iddep" value="<?php echo htmlspecialchars($newiddep); ?>" readonly>
+                    <label for="id" class="form-label">Id pegawai</label>
+                        <input type="text" class="form-control" id="id" name="id" value="<?php echo htmlspecialchars($newiddep); ?>" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="departemen" class="form-label">Nama departemen</label>
-                        <input type="text" class="form-control" id="departemen" name="departemen" required>
+                        <label for="edit_departemen" class="form-label">Id Departemen</label>
+                        <input type="text" class="form-control" id="edit_id_departemen" name="id_departemen" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add</button>
+                    <div class="mb-3">
+                        <label for="edit_id_jabatan" class="form-label">Id Jabatan</label>
+                        <input type="text" class="form-control" id="edit_id_jabatan" name="id_jabatan" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_nama" class="form-label">Nama pegawai</label>
+                        <input type="text" class="form-control" id="edit_nama" name="nama" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_email" class="form-label">email</label>
+                        <input type="text" class="form-control" id="edit_email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_alamat" class="form-label">alamat</label>
+                        <input type="text" class="form-control" id="edit_alamat" name="alamat" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_telp" class="form-label">no telepon</label>
+                        <input type="text" class="form-control" id="edit_telp" name="telp" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="foto" class="form-label">foto</label>
+                        <input type="file" class="form-control" id="foto" name="foto" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" value="Upload File">Add</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
+<?php 
+?>
 <!-- Modal Edit departemen -->
 <div class="modal fade" id="editdepartemenModal" tabindex="-1" aria-labelledby="editdepartemenModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -142,16 +190,41 @@ if (isset($_SESSION['message'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="edit_departemen.php" method="post">
+                <form action="edit_pegawai.php" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label for="edit_iddep" class="form-label">Kode departemen</label>
-                        <input type="text" class="form-control" id="edit_iddep" name="iddep" readonly>
+                        <label for="edit_iddep" class="form-label">id pegawai</label>
+                        <input type="text" class="form-control" id="edit_iddep" name="id" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_departemen" class="form-label">Nama departemen</label>
-                        <input type="text" class="form-control" id="edit_departemen" name="departemen" required>
+                        <label for="edit_departemen" class="form-label">Id Departemen</label>
+                        <input type="text" class="form-control" id="edit_id_departemen" name="id_departemen" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    <div class="mb-3">
+                        <label for="edit_iddep" class="form-label">Id Jabatan</label>
+                        <input type="text" class="form-control" id="edit_id_jabatan" name="id_jabatan" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_departemen" class="form-label">Nama pegawai</label>
+                        <input type="text" class="form-control" id="edit_nama" name="nama" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_iddep" class="form-label">email</label>
+                        <input type="text" class="form-control" id="edit_email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_departemen" class="form-label">alamat</label>
+                        <input type="text" class="form-control" id="edit_alamat" name="alamat" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_iddep" class="form-label">no telepon</label>
+                        <input type="text" class="form-control" id="edit_telp" name="telp" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="foto" class="form-label">foto</label>
+                        <input type="file" class="form-control" id="foto" name="foto" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" value="Upload File">Update</button>
                 </form>
             </div>
         </div>
@@ -194,11 +267,21 @@ if (isset($_SESSION['message'])) {
         $('#editdepartemenModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
             var iddep = button.data('id');
-            var departemen = button.data('name');
+            var nama = button.data('name');
+            var id_departemen = button.data('id_departemen');
+            var id_jabatan = button.data('id_jabatan');
+            var alamat = button.data('alamat');
+            var email = button.data('email');
+            var telp = button.data('telp');
             
             var modal = $(this);
             modal.find('#edit_iddep').val(iddep);
-            modal.find('#edit_departemen').val(departemen);
+            modal.find('#edit_nama').val(nama);
+            modal.find('#edit_id_departemen').val(id_departemen);
+            modal.find('#edit_alamat').val(alamat);
+            modal.find('#edit_id_jabatan').val(id_jabatan);
+            modal.find('#edit_email').val(email);
+            modal.find('#edit_telp').val(telp);
         });
 
         // Show message if it exists in the session
@@ -224,7 +307,7 @@ if (isset($_SESSION['message'])) {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: 'delete_departemen.php',
+                        url: 'delete_pegawai.php',
                         type: 'POST',
                         data: { iddep: iddep },
                         success: function(response) {

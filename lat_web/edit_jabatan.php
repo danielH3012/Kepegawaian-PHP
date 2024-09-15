@@ -4,10 +4,10 @@ require 'config.php';
 
 if($_SERVER['REQUEST_METHOD']== 'POST'){
     $iddep = $_POST['iddep'];
-    $departemen = $_POST['departemen'];
+    $jabatan = $_POST['jabatan'];
 
-    $stmt = $conn->prepare("UPDATE departemen SET nama_departemen = ? WHERE id_departemen = ?");
-    $stmt->bind_param("ss",$departemen,$iddep);
+    $stmt = $conn->prepare("UPDATE jabatan SET nama_jabatan = ? WHERE id_jabatan = ?");
+    $stmt->bind_param("ss",$jabatan,$iddep);
 
     if($stmt->execute()){
         $_SESSION['massage'] = ['type'=> 'success', 'text'=>'Data departemen berhasil diperbaharui.'];
@@ -15,10 +15,10 @@ if($_SERVER['REQUEST_METHOD']== 'POST'){
         $_SESSION['massage'] = ['type'=> 'success', 'text'=>'Data departemen gagal diperbaharui.'];
     }
     $stmt->close();
-    header("Location: departemen.php");
+    header("Location: jabatan.php");
     exit();
 }else{
-    header("Location: departemen.php");
+    header("Location: jabatan.php");
     exit();
 }
 ?>
