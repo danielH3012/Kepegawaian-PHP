@@ -29,6 +29,18 @@ $stmt->close();
 $result = $conn->query("SELECT * FROM pegawai");
 
 // Dapatkan nomor urut terbaru untuk iddep baru
+$jabatan = $conn->query("SELECT * FROM jabatan");
+
+// Dapatkan nomor urut terbaru untuk iddep baru
+$departemen1 = $conn->query("SELECT * FROM departemen");
+
+// Dapatkan nomor urut terbaru untuk iddep baru
+$jabatan1 = $conn->query("SELECT * FROM jabatan");
+
+// Dapatkan nomor urut terbaru untuk iddep baru
+$departemen2 = $conn->query("SELECT * FROM departemen");
+
+// Dapatkan nomor urut terbaru untuk iddep baru
 $stmt = $conn->query("SELECT * FROM pegawai ORDER BY id_pegawai DESC LIMIT 1");
 $latestiddep = $stmt->fetch_row();
 $urut = 1;
@@ -90,8 +102,7 @@ if (isset($_SESSION['message'])) {
                                     while ($departemen = $result->fetch_row()) {
                                         echo "<tr>";
                                         echo "<td class='text-center'>" . $no++ . "</td>";
-                                        echo "<td class='text-center'><img style= \"height: 50px; width: 50px;\" src= ". $departemen[7];"</td>";
-                                        echo "<td class='text-center'>";
+                                        echo "<td class='text-center'><img style= \"height: 50px; width: 50px;\" src= ". $departemen[7] ."</td>";
                                         echo "<td class='text-center'>" . $departemen[0] . "</td>";
                                         echo "<td class='text-center'>" . $departemen[1] . "</td>";
                                         echo "<td class='text-center'>" . $departemen[2] . "</td>";
@@ -144,12 +155,24 @@ if (isset($_SESSION['message'])) {
                         <input type="text" class="form-control" id="id" name="id" value="<?php echo htmlspecialchars($newiddep); ?>" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_departemen" class="form-label">Id Departemen</label>
-                        <input type="text" class="form-control" id="edit_id_departemen" name="id_departemen" required>
+                        <label for="id_departemen" class="form-label">Id Departemen</label>
+                        <select name="id_departemen" id="edit_id_departemen" required>
+                    <?php 
+                        while ($pilihan1 = $departemen1->fetch_row()) {
+                            echo "<option value=". $pilihan1[0].">". $pilihan1[0]."</option>" ; 
+                    }
+                    ?> 
+                    </select>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_id_jabatan" class="form-label">Id Jabatan</label>
-                        <input type="text" class="form-control" id="edit_id_jabatan" name="id_jabatan" required>
+                        <label for="id_jabatan" class="form-label">Id Jabatan</label>
+                        <select name="id_jabatan" id="edit_id_jabatan" required>
+                    <?php 
+                        while ($hasil = $jabatan->fetch_row()) {
+                            echo "<option value=". $hasil[0].">". $hasil[0]."</option>" ; 
+                    }
+                    ?> 
+                    </select>
                     </div>
                     <div class="mb-3">
                         <label for="edit_nama" class="form-label">Nama pegawai</label>
@@ -196,28 +219,40 @@ if (isset($_SESSION['message'])) {
                         <input type="text" class="form-control" id="edit_iddep" name="id" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_departemen" class="form-label">Id Departemen</label>
-                        <input type="text" class="form-control" id="edit_id_departemen" name="id_departemen" required>
+                        <label for="id_departemen" class="form-label">Id Departemen</label>
+                        <select name="id_departemen" id="edit_id_departemen" required>
+                    <?php 
+                        while ($pilihan = $departemen2->fetch_row()) {
+                            echo "<option value=". $pilihan[0].">". $pilihan[0]."</option>" ; 
+                    }
+                    ?> 
+                    </select>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_iddep" class="form-label">Id Jabatan</label>
-                        <input type="text" class="form-control" id="edit_id_jabatan" name="id_jabatan" required>
+                        <label for="id_jabatan" class="form-label">Id Jabatan</label>
+                        <select name="id_jabatan" id="edit_id_jabatan" required>
+                    <?php 
+                        while ($hasil = $jabatan1->fetch_row()) {
+                            echo "<option value=". $hasil[0].">". $hasil[0]."</option>" ; 
+                    }
+                    ?> 
+                    </select>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_departemen" class="form-label">Nama pegawai</label>
+                        <label for="edit_nama" class="form-label">Nama pegawai</label>
                         <input type="text" class="form-control" id="edit_nama" name="nama" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="edit_iddep" class="form-label">email</label>
+                        <label for="edit_email" class="form-label">email</label>
                         <input type="text" class="form-control" id="edit_email" name="email" required>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_departemen" class="form-label">alamat</label>
+                        <label for="edit_alamat" class="form-label">alamat</label>
                         <input type="text" class="form-control" id="edit_alamat" name="alamat" required>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_iddep" class="form-label">no telepon</label>
+                        <label for="edit_telp" class="form-label">no telepon</label>
                         <input type="text" class="form-control" id="edit_telp" name="telp" required>
                     </div>
                     <div class="mb-3">

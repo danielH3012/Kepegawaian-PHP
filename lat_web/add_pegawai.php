@@ -13,7 +13,6 @@ if($_SERVER['REQUEST_METHOD']== 'POST'){
 
     $target_dir = "C:/xampp/htdocs/Kepegawaian-PHP/lat_web/img/";
     $file ="img/". basename($_FILES["foto"]["name"]);
-    $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($file,PATHINFO_EXTENSION));
     move_uploaded_file($_FILES["foto"]["tmp_name"], $file);
     $file = "\"" . $file . "\"";
