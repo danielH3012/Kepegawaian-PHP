@@ -19,36 +19,21 @@ $stmt->fetch();
 $stmt->close();
 
 // Ambil data nama usaha dan alamat dari database
-$stmt = $conn->prepare("SELECT nama, alamat FROM namausaha LIMIT 1");
+$stmt = $conn->prepare("SELECT namausaha, alamat FROM tblnamausaha LIMIT 1");
 $stmt->execute();
 $stmt->bind_result($namaUsaha, $alamatUsaha);
 $stmt->fetch();
 $stmt->close();
 
-// Ambil data dari tabel departemen
-$result = $conn->query("SELECT * FROM pegawai");
-
 // Dapatkan nomor urut terbaru untuk iddep baru
-$jabatan = $conn->query("SELECT * FROM jabatan");
-
-// Dapatkan nomor urut terbaru untuk iddep baru
-$departemen1 = $conn->query("SELECT * FROM departemen");
-
-// Dapatkan nomor urut terbaru untuk iddep baru
-$jabatan1 = $conn->query("SELECT * FROM jabatan");
-
-// Dapatkan nomor urut terbaru untuk iddep baru
-$departemen2 = $conn->query("SELECT * FROM departemen");
-
-// Dapatkan nomor urut terbaru untuk iddep baru
-$stmt = $conn->query("SELECT * FROM pegawai ORDER BY id_pegawai DESC LIMIT 1");
+$stmt = $conn->query("SELECT id_pegawai FROM pegawai ORDER BY id_pegawai DESC LIMIT 1");
 $latestiddep = $stmt->fetch_row();
 $urut = 1;
 if ($latestiddep) {
-    $latestNumber = $latestiddep[0];
+    $latestNumber = (int) substr($latestiddep['id_departemen'], 1);
     $urut = $latestNumber + 1;
 }
-$newiddep = $urut;
+$newiddep = 'D' . str_pad($urut, 3, '0', STR_PAD_LEFT);
 
 // Simpan pesan ke variabel dan hapus dari session
 $message = null;
@@ -65,12 +50,12 @@ if (isset($_SESSION['message'])) {
         <p><?php echo htmlspecialchars($alamatUsaha); ?></p>
     </header>
 
-   <?php include 'sidebar.php'; ?>
+    <?php include 'sidebar.php'; ?>
     <div class="content" id="content">
         <div class="container-fluid mt-3">
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-between align-items-center">
-                    <h4>Pegawai</h4>
+                    <h4>Departemen</h4>
                     <div>
                         <button type="button" class="btn btn-primary mb-3 mr-2" data-bs-toggle="modal" data-bs-target="#adddepartemenModal"><i class='fas fa-plus'></i> Add </button>
                         <button type="button" class="btn btn-secondary mb-3" id="printButton"><i class='fas fa-print'></i> Print</button>
@@ -85,12 +70,12 @@ if (isset($_SESSION['message'])) {
                                 <tr>
                                     <th>No</th>
                                     <th>Foto</th>
-                                    <th>Id Pegawai</th>
-                                    <th>Id Departemen</th>
-                                    <th>Id Jabatan</th>
+                                    <th>ID Pegawai</th>
+                                    <th>ID Departemen</th>
+                                    <th>ID Jabatan</th>
                                     <th>Nama Pegawai</th>
                                     <th>Alamat</th>
-                                    <th>Nomor Telepon</th>
+                                    <th>No. Telepon</th>
                                     <th>Email</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -102,26 +87,19 @@ if (isset($_SESSION['message'])) {
                                     while ($departemen = $result->fetch_row()) {
                                         echo "<tr>";
                                         echo "<td class='text-center'>" . $no++ . "</td>";
-                                        echo "<td class='text-center'><img style= \"height: 50px; width: 50px;\" src= ". $departemen[7] ."</td>";
-                                        echo "<td class='text-center'>" . $departemen[0] . "</td>";
-                                        echo "<td class='text-center'>" . $departemen[1] . "</td>";
-                                        echo "<td class='text-center'>" . $departemen[2] . "</td>";
-                                        echo "<td class='text-center'>" . $departemen[3] . "</td>";
-                                        echo "<td class='text-center'>" . $departemen[4] . "</td>";
-                                        echo "<td class='text-center'>" . $departemen[5] . "</td>";
-                                        echo "<td class='text-center'>" . $departemen[6] . "</td>";
+                                        echo "<td class='text-center'>" . $departemen[7] . "</td>";
+                                        echo "<td class='text-center'>" . htmlspecialchars($departemen[0]) . "</td>";
+                                        echo "<td class='text-center'>" . htmlspecialchars($departemen[1]) . "</td>";
+                                        echo "<td class='text-center'>" . htmlspecialchars($departemen[2]) . "</td>";
+                                        echo "<td class='text-center'>" . htmlspecialchars($departemen[3]) . "</td>";
+                                        echo "<td class='text-center'>" . htmlspecialchars($departemen[4]) . "</td>";
+                                        echo "<td class='text-center'>" . htmlspecialchars($departemen[5]) . "</td>";
+                                        echo "<td class='text-center'>" . htmlspecialchars($departemen[6]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($departemen['nama_departemen']) . "</td>";
                                         echo "<td class='text-center'>";
                                         echo "<div class='d-flex justify-content-center'>";
-                                        echo "<button class='btn btn-warning btn-sm edit-btn mr-1' data-bs-toggle='modal' data-bs-target='#editdepartemenModal'
-                                        data-id='" . htmlspecialchars($departemen[0]) . "
-                                        ' data-id_departemen='" . htmlspecialchars($departemen[1]) .  "
-                                        ' data-id_jabatan='" . htmlspecialchars($departemen[2]) .  "
-                                        ' data-name='" . htmlspecialchars($departemen[3]) .  "
-                                        ' data-alamat='" . htmlspecialchars($departemen[4]) .  "
-                                        ' data-telp='" . htmlspecialchars($departemen[5]) .  "
-                                        ' data-email='" . htmlspecialchars($departemen[6]) .  "
-                                        '><i class='fas fa-edit'></i> Edit</button>";
-                                        echo "<button class='btn btn-danger btn-sm delete-btn' data-id='" . htmlspecialchars($departemen[0]) . "'><i class='fas fa-trash'></i> Delete</button>";
+                                        echo "<button class='btn btn-warning btn-sm edit-btn mr-1' data-bs-toggle='modal' data-bs-target='#editdepartemenModal' data-id='" . htmlspecialchars($departemen['id_departemen']) . "' data-name='" . htmlspecialchars($departemen['nama_departemen']) .  "'><i class='fas fa-edit'></i> Edit</button>";
+                                        echo "<button class='btn btn-danger btn-sm delete-btn' data-id='" . htmlspecialchars($departemen['id_departemen']) . "'><i class='fas fa-trash'></i> Delete</button>";
                                         echo "</div>";
                                         echo "</td>";
                                         echo "</tr>";
@@ -145,65 +123,26 @@ if (isset($_SESSION['message'])) {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="adddepartemenModalLabel">Add pegawai</h5>
+                <h5 class="modal-title" id="adddepartemenModalLabel">Add departemen</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="add_pegawai.php" method="post"  enctype="multipart/form-data">
+                <form action="add_departemen.php" method="post">
                     <div class="mb-3">
-                    <label for="id" class="form-label">Id pegawai</label>
-                        <input type="text" class="form-control" id="id" name="id" value="<?php echo htmlspecialchars($newiddep); ?>" readonly>
+                    <label for="iddep" class="form-label">Kode departemen</label>
+                        <input type="text" class="form-control" id="iddep" name="iddep" value="<?php echo htmlspecialchars($newiddep); ?>" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="id_departemen" class="form-label">Id Departemen</label>
-                        <select name="id_departemen" id="edit_id_departemen" required>
-                    <?php 
-                        while ($pilihan1 = $departemen1->fetch_row()) {
-                            echo "<option value=". $pilihan1[0].">". $pilihan1[0]."</option>" ; 
-                    }
-                    ?> 
-                    </select>
+                        <label for="departemen" class="form-label">Nama departemen</label>
+                        <input type="text" class="form-control" id="departemen" name="departemen" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="id_jabatan" class="form-label">Id Jabatan</label>
-                        <select name="id_jabatan" id="edit_id_jabatan" required>
-                    <?php 
-                        while ($hasil = $jabatan->fetch_row()) {
-                            echo "<option value=". $hasil[0].">". $hasil[0]."</option>" ; 
-                    }
-                    ?> 
-                    </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_nama" class="form-label">Nama pegawai</label>
-                        <input type="text" class="form-control" id="edit_nama" name="nama" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="edit_email" class="form-label">email</label>
-                        <input type="text" class="form-control" id="edit_email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_alamat" class="form-label">alamat</label>
-                        <input type="text" class="form-control" id="edit_alamat" name="alamat" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_telp" class="form-label">no telepon</label>
-                        <input type="text" class="form-control" id="edit_telp" name="telp" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="foto" class="form-label">foto</label>
-                        <input type="file" class="form-control" id="foto" name="foto" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" value="Upload File">Add</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<?php 
-?>
 <!-- Modal Edit departemen -->
 <div class="modal fade" id="editdepartemenModal" tabindex="-1" aria-labelledby="editdepartemenModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -213,53 +152,16 @@ if (isset($_SESSION['message'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="edit_pegawai.php" method="post" enctype="multipart/form-data">
+                <form action="edit_departemen.php" method="post">
                     <div class="mb-3">
-                        <label for="edit_iddep" class="form-label">id pegawai</label>
-                        <input type="text" class="form-control" id="edit_iddep" name="id" readonly>
+                        <label for="edit_iddep" class="form-label">Kode departemen</label>
+                        <input type="text" class="form-control" id="edit_iddep" name="iddep" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="id_departemen" class="form-label">Id Departemen</label>
-                        <select name="id_departemen" id="edit_id_departemen" required>
-                    <?php 
-                        while ($pilihan = $departemen2->fetch_row()) {
-                            echo "<option value=". $pilihan[0].">". $pilihan[0]."</option>" ; 
-                    }
-                    ?> 
-                    </select>
+                        <label for="edit_departemen" class="form-label">Nama departemen</label>
+                        <input type="text" class="form-control" id="edit_departemen" name="departemen" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="id_jabatan" class="form-label">Id Jabatan</label>
-                        <select name="id_jabatan" id="edit_id_jabatan" required>
-                    <?php 
-                        while ($hasil = $jabatan1->fetch_row()) {
-                            echo "<option value=". $hasil[0].">". $hasil[0]."</option>" ; 
-                    }
-                    ?> 
-                    </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_nama" class="form-label">Nama pegawai</label>
-                        <input type="text" class="form-control" id="edit_nama" name="nama" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="edit_email" class="form-label">email</label>
-                        <input type="text" class="form-control" id="edit_email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_alamat" class="form-label">alamat</label>
-                        <input type="text" class="form-control" id="edit_alamat" name="alamat" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_telp" class="form-label">no telepon</label>
-                        <input type="text" class="form-control" id="edit_telp" name="telp" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="foto" class="form-label">foto</label>
-                        <input type="file" class="form-control" id="foto" name="foto" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" value="Upload File">Update</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
         </div>
@@ -302,21 +204,11 @@ if (isset($_SESSION['message'])) {
         $('#editdepartemenModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
             var iddep = button.data('id');
-            var nama = button.data('name');
-            var id_departemen = button.data('id_departemen');
-            var id_jabatan = button.data('id_jabatan');
-            var alamat = button.data('alamat');
-            var email = button.data('email');
-            var telp = button.data('telp');
+            var departemen = button.data('name');
             
             var modal = $(this);
             modal.find('#edit_iddep').val(iddep);
-            modal.find('#edit_nama').val(nama);
-            modal.find('#edit_id_departemen').val(id_departemen);
-            modal.find('#edit_alamat').val(alamat);
-            modal.find('#edit_id_jabatan').val(id_jabatan);
-            modal.find('#edit_email').val(email);
-            modal.find('#edit_telp').val(telp);
+            modal.find('#edit_departemen').val(departemen);
         });
 
         // Show message if it exists in the session
@@ -342,7 +234,7 @@ if (isset($_SESSION['message'])) {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: 'delete_pegawai.php',
+                        url: 'delete_departemen.php',
                         type: 'POST',
                         data: { iddep: iddep },
                         success: function(response) {

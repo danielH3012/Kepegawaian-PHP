@@ -5,8 +5,8 @@ require 'config.php';
 if($_SERVER['REQUEST_METHOD']== 'POST'){
     $iddep = $_POST['iddep'];
 
-    $stmt = $conn->prepare("DELETE FROM departemen WHERE id_departemen = ?");
-    $stmt->bind_param("s",$iddep);
+    $stmt = $conn->prepare("DELETE FROM departemen WHERE iddep = ?");
+    $stmt->bind_param("ss",$iddep);
 
     if($stmt->execute()){
         echo "data berhasil dihapus";

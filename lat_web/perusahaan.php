@@ -11,7 +11,7 @@ include('header.php');
 $iduser = $_SESSION['user'];
 
 // Ambil data dari tabel departemen
-$result = $conn->query("SELECT * FROM namausaha");
+$result = $conn->query("SELECT * FROM tblnamausaha");
 $usaha = $result->fetch_row();
 
 // Simpan pesan ke variabel dan hapus dari session
@@ -40,43 +40,45 @@ if (isset($_SESSION['message'])) {
 
     <div class="form-group">
         <label>NOMOR TELEPON:</label> 
-            <input type="txt" name="nik" value="<?php echo $usaha[2];?>" class="form-control" readonly/>
+            <input type="txt" name="nik" value="<?php echo $usaha[3];?>" class="form-control" readonly/>
     </div>
 
     <div class="form-group">
         <label>FAX:</label> 
-            <input type="txt" name="nik" value="<?php echo $usaha[3];?>" class="form-control" readonly/>
-    </div>
-    <div class="form-group">
-        <label>EMAIL:</label> 
-            <input type="txt" name="nik" value="<?php echo $usaha[4];?>" class="form-control" readonly/>
-    </div>
-    <div class="form-group">
-        <label>NPWP:</label> 
             <input type="txt" name="nik" value="<?php echo $usaha[5];?>" class="form-control" readonly/>
     </div>
     <div class="form-group">
-        <label>BANK:</label> 
+        <label>EMAIL:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[2];?>" class="form-control" readonly/>
+    </div>
+    <div class="form-group">
+        <label>NPWP:</label> 
             <input type="txt" name="nik" value="<?php echo $usaha[6];?>" class="form-control" readonly/>
     </div>
     <div class="form-group">
-        <label>NOMOR ACCOUNT:</label> 
+        <label>BANK:</label> 
             <input type="txt" name="nik" value="<?php echo $usaha[7];?>" class="form-control" readonly/>
     </div>
     <div class="form-group">
-        <label>ATAS NAMA:</label> 
+        <label>NOMOR ACCOUNT:</label> 
             <input type="txt" name="nik" value="<?php echo $usaha[8];?>" class="form-control" readonly/>
     </div>
     <div class="form-group">
-        <label>PIMPINAN:</label> 
+        <label>ATAS NAMA:</label> 
             <input type="txt" name="nik" value="<?php echo $usaha[9];?>" class="form-control" readonly/>
     </div>
     <div class="form-group">
-        <label>    </label> 
-            <input type="txt" name="nik" value="<?php echo $usaha[9];?>" class="form-control" readonly/>
+        <label>PIMPINAN:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[4];?>" class="form-control" readonly/>
+    </div>
+    <div class="form-group">
+        <label>PIMPINAN:</label> 
+            <input type="txt" name="nik" value="<?php echo $usaha[4];?>" class="form-control" readonly/>
     </div>
     <?php require 'footer.php'; ?>
  </div>
+
+<!--Ini untuk mengedit departemen-->
 
  <div class="modal fade" id="adddepartemenModal" tabindex="-1" aria-labelledby="adddepartemenModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -99,36 +101,36 @@ if (isset($_SESSION['message'])) {
 
     <div class="form-group">
         <label>NOMOR TELEPON:</label> 
-            <input type="txt" name="notelp" value="<?php echo $usaha[2];?>" class="form-control" required/>
+            <input type="txt" name="notelp" value="<?php echo $usaha[3];?>" class="form-control" required/>
     </div>
 
     <div class="form-group">
         <label>FAX:</label> 
-            <input type="txt" name="fax" value="<?php echo $usaha[3];?>" class="form-control" required/>
+            <input type="txt" name="fax" value="<?php echo $usaha[5];?>" class="form-control" required/>
     </div>
     <div class="form-group">
         <label>EMAIL:</label> 
-            <input type="txt" name="email" value="<?php echo $usaha[4];?>" class="form-control" required/>
+            <input type="txt" name="email" value="<?php echo $usaha[2];?>" class="form-control" required/>
     </div>
     <div class="form-group">
         <label>NPWP:</label> 
-            <input type="txt" name="npwp" value="<?php echo $usaha[5];?>" class="form-control" required/>
+            <input type="txt" name="npwp" value="<?php echo $usaha[6];?>" class="form-control" required/>
     </div>
     <div class="form-group">
         <label>BANK:</label> 
-            <input type="txt" name="bank" value="<?php echo $usaha[6];?>" class="form-control" required/>
+            <input type="txt" name="bank" value="<?php echo $usaha[7];?>" class="form-control" required/>
     </div>
     <div class="form-group">
         <label>NOMOR ACCOUNT:</label> 
-            <input type="txt" name="akun" value="<?php echo $usaha[7];?>" class="form-control" required/>
+            <input type="txt" name="akun" value="<?php echo $usaha[8];?>" class="form-control" required/>
     </div>
     <div class="form-group">
         <label>ATAS NAMA:</label> 
-            <input type="txt" name="an" value="<?php echo $usaha[8];?>" class="form-control" required/>
+            <input type="txt" name="an" value="<?php echo $usaha[9];?>" class="form-control" required/>
     </div>
     <div class="form-group">
         <label>PIMPINAN:</label> 
-            <input type="txt" name="pimpinan" value="<?php echo $usaha[9];?>" class="form-control" required/>
+            <input type="txt" name="pimpinan" value="<?php echo $usaha[4];?>" class="form-control" required/>
     </div>
                     <button type="submit" class="btn btn-primary">Add</button>
                 </form>
@@ -147,4 +149,3 @@ if (isset($_SESSION['message'])) {
 
 </body>
 </html>
-

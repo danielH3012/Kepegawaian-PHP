@@ -1,4 +1,3 @@
-
 <footer>
     <p>&copy; 2024 Asuransi Alat Berat. All rights reserved.</p>
 </footer>

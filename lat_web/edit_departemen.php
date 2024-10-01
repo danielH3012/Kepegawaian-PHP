@@ -6,8 +6,8 @@ if($_SERVER['REQUEST_METHOD']== 'POST'){
     $iddep = $_POST['iddep'];
     $departemen = $_POST['departemen'];
 
-    $stmt = $conn->prepare("UPDATE departemen SET nama_departemen = ? WHERE id_departemen = ?");
-    $stmt->bind_param("ss",$departemen,$iddep);
+    $stmt = $conn->prepare("UPDATE INTO departemen SET departemen = ? WHERE iddep = ?");
+    $stmt->bind_param("ss",$iddep,$departemen);
 
     if($stmt->execute()){
         $_SESSION['massage'] = ['type'=> 'success', 'text'=>'Data departemen berhasil diperbaharui.'];

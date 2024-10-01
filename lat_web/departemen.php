@@ -19,7 +19,7 @@ $stmt->fetch();
 $stmt->close();
 
 // Ambil data nama usaha dan alamat dari database
-$stmt = $conn->prepare("SELECT nama, alamat FROM namausaha LIMIT 1");
+$stmt = $conn->prepare("SELECT namausaha, alamat FROM tblnamausaha LIMIT 1");
 $stmt->execute();
 $stmt->bind_result($namaUsaha, $alamatUsaha);
 $stmt->fetch();
@@ -33,10 +33,10 @@ $stmt = $conn->query("SELECT id_departemen FROM departemen ORDER BY id_departeme
 $latestiddep = $stmt->fetch_assoc();
 $urut = 1;
 if ($latestiddep) {
-    $latestNumber = $latestiddep['id_departemen'];
+    $latestNumber = (int) substr($latestiddep['id_departemen'], 1);
     $urut = $latestNumber + 1;
 }
-$newiddep = $urut;
+$newiddep = 'D' . str_pad($urut, 3, '0', STR_PAD_LEFT);
 
 // Simpan pesan ke variabel dan hapus dari session
 $message = null;

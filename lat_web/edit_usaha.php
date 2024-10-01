@@ -15,7 +15,7 @@ if($_SERVER['REQUEST_METHOD']== 'POST'){
     $pimpinan = $_POST['pimpinan'];
 
 
-    $stmt = $conn->prepare("UPDATE namausaha SET nama = ?, alamat = ?, notelepon = ?,fax = ?,email = ?,npwp = ?,bank = ?,noaccount = ?,atasnama = ?,pimpinan = ?  ");
+    $stmt = $conn->prepare("UPDATE tblnamausaha SET namausaha = ?, alamat = ?, notlp = ?,fax = ?,email = ?,npwp = ?,bank = ?,noaccount = ?,atasnama = ?,pimpinan = ?  ");
     $stmt->bind_param("ssssssssss",$nama,$alamat,$notelp,$fax,$email,$npwp,$bank,$akun,$atasnama,$pimpinan);
 
     if($stmt->execute()){

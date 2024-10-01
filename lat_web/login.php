@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Verifikasi password dengan perbandingan langsung (tanpa hashing)
         if ($password == $user['password']) {
             $_SESSION['user'] = $user;
-            header('Location: dashboard.php');
+            header('Location: index.php');
             exit; // Menghentikan eksekusi setelah redirect
     } else {
         $error = "Password salah!";
